@@ -21,8 +21,11 @@ func main() {
 	r.HandleFunc("/api/upload", handleUpload).Methods("POST")
 	r.HandleFunc("/api/ask", handleAsk).Methods("POST")
 
-	log.Println("Server running on http://localhost:8080")
-	http.ListenAndServe(":8080", r)
+	log.Println("server started on :8080")
+
+	if err := http.ListenAndServe(":8080", r); err != nil {
+		log.Fatal("server exit with error:", err)
+	}
 }
 
 func handleUpload(w http.ResponseWriter, r *http.Request) {
