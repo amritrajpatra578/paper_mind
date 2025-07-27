@@ -1,4 +1,3 @@
-// main.go (Updated to fix struct literal issue)
 package main
 
 import (
@@ -15,6 +14,8 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/ledongthuc/pdf"
 )
+
+var lastUploadedPath string // ⚠️ Stores last uploaded file (not per-user safe)
 
 type ChatMessage struct {
 	Role    string `json:"role"`
@@ -52,8 +53,12 @@ func main() {
 }
 
 func handleUpload(w http.ResponseWriter, r *http.Request) {
-	if err := r.ParseMultipartForm(10 << 20); err != nil {
-		http.Error(w, "Invalid form data", http.StatusBadRequest)
+	const maxUploadSize = 200 << 20 // 200 MB
+
+	r.Body = http.MaxBytesReader(w, r.Body, maxUploadSize)
+
+	if err := r.ParseMultipartForm(maxUploadSize); err != nil {
+		http.Error(w, "File too large or invalid form data", http.StatusBadRequest)
 		return
 	}
 
@@ -64,23 +69,32 @@ func handleUpload(w http.ResponseWriter, r *http.Request) {
 	}
 	defer file.Close()
 
-	path := filepath.Join("uploads", handler.Filename)
 	if err := os.MkdirAll("uploads", os.ModePerm); err != nil {
 		http.Error(w, "Failed to create upload directory", http.StatusInternalServerError)
 		return
 	}
 
-	f, err := os.Create(path)
+	// Delete previous file if it exists
+	if lastUploadedPath != "" {
+		if err := os.Remove(lastUploadedPath); err != nil {
+			log.Printf("⚠️ Failed to delete old file: %v", err)
+		}
+	}
+
+	path := filepath.Join("uploads", handler.Filename)
+	out, err := os.Create(path)
 	if err != nil {
 		http.Error(w, "Failed to save file", http.StatusInternalServerError)
 		return
 	}
-	defer f.Close()
+	defer out.Close()
 
-	if _, err := io.Copy(f, file); err != nil {
+	if _, err := io.Copy(out, file); err != nil {
 		http.Error(w, "Failed to write file", http.StatusInternalServerError)
 		return
 	}
+
+	lastUploadedPath = path // 🔄 Save current file path
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]string{
