@@ -11,9 +11,10 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/joho/godotenv"
 	"github.com/ledongthuc/pdf"
 )
+
+var GROQ_API_KEY string = "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"
 
 // Global variable to store path of last uploaded PDF
 var lastUploadedPath string
@@ -48,11 +49,6 @@ type AskResponse struct {
 }
 
 func main() {
-	// Load environment variables (i.e, GROQ_API_KEY)
-	if err := godotenv.Load(); err != nil {
-		log.Println("Could not load .env file")
-	}
-
 	// Routes
 	http.HandleFunc("/api/upload", handleUpload)
 	http.HandleFunc("/api/ask", handleAsk)
@@ -169,10 +165,7 @@ func handleAsk(w http.ResponseWriter, r *http.Request) {
 
 // callGroq sends the question and PDF content to Groq API and returns the answer
 func callGroq(pages []string, question string) (string, error) {
-	key := os.Getenv("GROQ_API_KEY")
-	if key == "" {
-		return "", fmt.Errorf("missing GROQ_API_KEY")
-	}
+
 
 	payload := GroqRequest{
 		Model:               "llama-3.3-70b-versatile",
@@ -198,7 +191,7 @@ func callGroq(pages []string, question string) (string, error) {
 		return "", err
 	}
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", "Bearer "+key)
+	req.Header.Set("Authorization", "Bearer "+ GROQ_API_KEY)
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
