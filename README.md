@@ -1,40 +1,108 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+Here’s your **updated `README.md`** with the **Caddy section included** and the **build section removed**. It assumes the project is at [https://github.com/amritrajpatra578/paperMind](https://github.com/amritrajpatra578/paperMind) and follows the structure we've discussed:
+
+---
+
+# 📄 PaperMind
+
+A lightweight web app that lets you **upload a PDF**, **ask questions**, and get **AI-powered answers with citations** to exact pages. Built with:
+
+- Groq LLaMA-3 for smart responses
+- Go backend with PDF parsing
+- Simple React frontend
+- Caddy for local HTTPS/static serving
+
+---
+
+## Features
+
+- Upload and preview PDF files
+- Ask questions in chat format
+- AI returns answers with page citations
+- Click citations to jump to relevant PDF page
+- Clean, responsive UI using Chakra UI v3
+- Minimal external dependencies
+
+---
 
 ## Getting Started
 
-First, run the development server:
+### Backend (Go)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+1. **Clone the repo**
+
+   ```bash
+   git clone https://github.com/amritrajpatra578/paperMind.git
+   cd paperMind
+   ```
+
+2. **Install dependencies**
+   Make sure you have Go installed (≥1.18). Then:
+
+   ```bash
+   cd backend
+   go mod tidy
+   ```
+
+3. **Run the backend**
+
+   ```bash
+   go run main.go
+   ```
+
+   This will start the server at: [http://localhost:8080](http://localhost:8080)
+
+---
+
+## 🌐 Frontend
+
+1. **Install dependencies**
+
+   ```bash
+   cd frontend
+   npm install
+   ```
+
+2. **Start the dev server**
+
+   ```bash
+   npm run dev
+   ```
+
+3. **Start the caddy server**
+
+   ```bash
+   caddy run
+   ```
+
+   Visit for installation: [https://caddyserver.com/docs/install](https://caddyserver.com/docs/install)
+
+---
+
+4. **Open your browser at following address**
+
+   [http://127.0.0.1:9000](http://127.0.0.1:9000)
+
+---
+
+## 📁 Project Structure
+
+```
+paperMind/
+├── backend/          # Go backend server
+│   └── uploads/      # Stored PDFs
+│   └── main.go
+├── frontend/         # React frontend
+│   ├── Caddyfile     # procy server from backend and frontend
+│   ├── pages/
+│   ├── components/
+│   └── ...
+└── README.md
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+## 📜 License
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+MIT © [amritrajpatra578](https://github.com/amritrajpatra578)
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
-
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+---
