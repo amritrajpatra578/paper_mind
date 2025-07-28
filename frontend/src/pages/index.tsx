@@ -109,7 +109,11 @@ export default function App() {
         gap={4}
       >
         <PDFViewer
-          pdfPath={pdfState.path ? backendBaseURL + pdfState.path : ""}
+          pdfPath={
+            pdfState.path
+              ? `${backendBaseURL.replace(/\/$/, "")}${pdfState.path}`
+              : ""
+          }
           currentPage={pdfState.currentPage}
         />
         <Box
