@@ -56,12 +56,28 @@ func main() {
 	// uploaded PDFs
 	http.Handle("/uploads/", http.StripPrefix("/uploads/", http.FileServer(http.Dir("uploads"))))
 
-	log.Println("Server running at 8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
+	log.Println("Server running at",":"+port )
+	log.Fatal(http.ListenAndServe(":"+port, nil))
+}
+
+func enableCORS(w http.ResponseWriter) {
+	w.Header().Set("Access-Control-Allow-Origin", "*") // Allows frontend
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 }
 
 // handleUpload handles PDF uploads and stores the file locally
 func handleUpload(w http.ResponseWriter, r *http.Request) {
+	enableCORS(w)
+	if r.Method == "OPTIONS" {
+		return
+	}
+	
 	const maxSize = 200 << 20 // 200MB max file size
 	r.Body = http.MaxBytesReader(w, r.Body, maxSize)
 
@@ -110,13 +126,18 @@ func handleUpload(w http.ResponseWriter, r *http.Request) {
 		"message":  "Uploaded",
 		"pdfPath":  "/" + savePath,
 		"filename": handler.Filename,
-	});err != nil {
-		log.Println("failed to write response for upload method:",err)
+	}); err != nil {
+		log.Println("failed to write response for upload method:", err)
 	}
 }
 
 // handleAsk processes the user question and responds using Groq API
 func handleAsk(w http.ResponseWriter, r *http.Request) {
+	enableCORS(w)
+	if r.Method == "OPTIONS" {
+		return
+	}
+	
 	var req AskRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil || req.Question == "" || req.PdfPath == "" {
 		http.Error(w, "Invalid input", http.StatusBadRequest)
@@ -158,14 +179,13 @@ func handleAsk(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := json.NewEncoder(w).Encode(AskResponse{Answer: answer, Citations: citations});err != nil {
-		log.Println("failed to write response for ask method:",err)
+	if err := json.NewEncoder(w).Encode(AskResponse{Answer: answer, Citations: citations}); err != nil {
+		log.Println("failed to write response for ask method:", err)
 	}
 }
 
 // callGroq sends the question and PDF content to Groq API and returns the answer
 func callGroq(pages []string, question string) (string, error) {
-
 
 	payload := GroqRequest{
 		Model:               "llama-3.3-70b-versatile",
@@ -191,7 +211,7 @@ func callGroq(pages []string, question string) (string, error) {
 		return "", err
 	}
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", "Bearer "+ GROQ_API_KEY)
+	req.Header.Set("Authorization", "Bearer "+GROQ_API_KEY)
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
