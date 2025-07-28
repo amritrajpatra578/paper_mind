@@ -1,8 +1,7 @@
-Here’s your **updated `README.md`** with the **Caddy section included** and the **build section removed**. It assumes the project is at [https://github.com/amritrajpatra578/paperMind](https://github.com/amritrajpatra578/paperMind) and follows the structure we've discussed:
-
+---
 ---
 
-# 📄 PaperMind
+# PaperMind
 
 A lightweight web app that lets you **upload a PDF**, **ask questions**, and get **AI-powered answers with citations** to exact pages. Built with:
 
@@ -12,6 +11,17 @@ A lightweight web app that lets you **upload a PDF**, **ask questions**, and get
 - Caddy for local HTTPS/static serving
 
 ---
+
+## Live Demo
+
+you must need to login vercel to access the url
+
+- **url**: [https://paper-mind-git-deployment-amritrajpatra578s-projects.vercel.app/](https://paper-mind-git-deployment-amritrajpatra578s-projects.vercel.app/)
+
+- **Frontend (Vercel)**: [https://paper-mind.vercel.app](https://paper-mind.vercel.app)
+- **Backend (Railway)**: [https://papermind-production.up.railway.app/](https://papermind-production.up.railway.app/)
+
+> Make sure to open the frontend link for usage.
 
 ## Features
 
@@ -84,7 +94,7 @@ A lightweight web app that lets you **upload a PDF**, **ask questions**, and get
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 paperMind/
@@ -101,7 +111,7 @@ paperMind/
 
 ---
 
-## 📜 License
+## License
 
 MIT © [amritrajpatra578](https://github.com/amritrajpatra578)
 
