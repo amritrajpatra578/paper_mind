@@ -65,8 +65,19 @@ func main() {
 	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
 
+func enableCORS(w http.ResponseWriter) {
+	w.Header().Set("Access-Control-Allow-Origin", "*") // Allows frontend
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+}
+
 // handleUpload handles PDF uploads and stores the file locally
 func handleUpload(w http.ResponseWriter, r *http.Request) {
+	enableCORS(w)
+	if r.Method == "OPTIONS" {
+		return
+	}
+	
 	const maxSize = 200 << 20 // 200MB max file size
 	r.Body = http.MaxBytesReader(w, r.Body, maxSize)
 
@@ -122,6 +133,11 @@ func handleUpload(w http.ResponseWriter, r *http.Request) {
 
 // handleAsk processes the user question and responds using Groq API
 func handleAsk(w http.ResponseWriter, r *http.Request) {
+	enableCORS(w)
+	if r.Method == "OPTIONS" {
+		return
+	}
+	
 	var req AskRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil || req.Question == "" || req.PdfPath == "" {
 		http.Error(w, "Invalid input", http.StatusBadRequest)
