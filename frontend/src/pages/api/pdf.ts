@@ -1,6 +1,5 @@
 import axios from "axios";
 
-const url = "https://papermind-production.up.railway.app/";
 // Types
 export interface QAItem {
   question: string;

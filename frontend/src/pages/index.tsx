@@ -87,6 +87,8 @@ export default function App() {
     setPdfState((prev) => ({ ...prev, currentPage: page }));
   };
 
+  const backendBaseURL = "https://papermind-production.up.railway.app/";
+
   return (
     <Box minH="100vh" bg="gray.100" p={4}>
       <HStack justify="space-between" mb={4}>
@@ -106,8 +108,10 @@ export default function App() {
         gridTemplateColumns="1fr 1fr"
         gap={4}
       >
-        <PDFViewer pdfPath={pdfState.path} currentPage={pdfState.currentPage} />
-
+        <PDFViewer
+          pdfPath={pdfState.path ? backendBaseURL + pdfState.path : ""}
+          currentPage={pdfState.currentPage}
+        />
         <Box
           bg="white"
           shadow="md"
